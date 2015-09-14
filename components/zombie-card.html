@@ -1,0 +1,68 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../bower_components/iron-flex-layout/classes/iron-flex-layout.html">
+<dom-module id="zombie-card">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+            :host .container {
+                margin-bottom: 12px;
+            }
+            :host .avatar {
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+            }
+            :host .card {
+                width: 100%;
+            }
+            :host .info {
+                text-align: right;
+            }
+            :host label {
+                display: block;
+                font-weight: bold;
+                border-bottom: 1px solid black;
+                width: 100%;
+                margin-top: 7px;
+                margin-bottom: 2px;
+            }
+            :host h4 {
+                text-align: center;
+            }
+        </style>
+        <div class="container">
+            <paper-card class="card">
+                <div class="card-content layout horizontal flex center">
+                    <iron-image src="[[profile.picture]]" alt="" class="avatar"
+                                preload
+                                fade
+                                sizing="cover"></iron-image>
+                    <div class="layout vertical flex info">
+                        <h4>[[profile.pseudo]]</h4>
+                        <div>[[profile.desc]]</div>
+                        <div>
+                            <label>Body info</label>
+                            <span>[[profile.integrity]]</span>
+                        </div>
+                        <div>
+                            <label>Diet</label>
+                            <span>[[profile.diet]]</span>
+                        </div>
+                    </div>
+                </div>
+            </paper-card>
+        </div>
+    </template>
+</dom-module>
+<script>
+    Polymer({
+        is: 'zombie-card',
+        properties: {
+            profile: Object
+        }
+    });
+</script>

@@ -1,0 +1,79 @@
+<html>
+    <head>
+        <title>The Dating Dead</title>
+        <link rel="stylesheet" href="style.css">
+        <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
+        <link rel="import" href="bower_components/iron-flex-layout/classes/iron-flex-layout.html">
+        <link rel="import" href="bower_components/iron-pages/iron-pages.html">
+        <link rel="import" href="bower_components/iron-list/iron-list.html">
+        <link rel="import" href="bower_components/paper-toolbar/paper-toolbar.html">
+        <link rel="import" href="bower_components/paper-styles/paper-styles.html">
+        <link rel="import" href="components/zombie-form.html">
+        <link rel="import" href="components/zombie-card.html">
+        <link rel="import" href="components/zombie-memory.html">
+        <link rel="import" href="components/zombie-chat.html">
+        <style is="custom-style">
+            :root {
+                --default-primary-color: #B13D3D;
+            }
+        </style>
+    </head>
+    <body>
+        <zombie-memory id="storage"></zombie-memory>
+        <paper-toolbar>
+            <div class="title">The Dating Dead <small> - I like 'em ded</small></div>
+        </paper-toolbar>
+        <div class="layout vertical center-center page">
+            <iron-pages selected="0" id="pages">
+                <form is="zombie-form" id="form"></form>
+                <div class="page-content layout vertical">
+                    <h3>Profiles</h3>
+                    <iron-list id="profiles" as="profile" class="flex">
+                        <template>
+                            <zombie-card profile="{{profile}}"></zombie-card>
+                        </template>
+                    </iron-list>
+                </div>
+            </iron-pages>
+            <zombie-chat id="chat" style="display: none"></zombie-chat>
+        </div>
+        <script>
+            var form = document.getElementById('form'),
+                pages = document.getElementById('pages'),
+                profiles = document.getElementById('profiles'),
+                storage = document.getElementById('storage'),
+                chat = document.getElementById('chat');
+
+            profiles.items = [{
+                pseudo: 'WallStreetBoy',
+                picture: 'http://wiki.urbandead.com/images/5/58/Zombie_Mc.JPG',
+                desc: "We all want a bit of a 'wow'!' But, this is simply me looking for someone who is simply herself!",
+                integrity: "Minor scrathes, I ow zat 2 my neibour",
+                diet: "Brainz"
+            },{
+                pseudo: 'SexyJaw',
+                picture: 'http://www.crazyscarygames.com/images/zombies/zombie-makeup-4.jpg',
+                integrity: "I am ritin wit my noz. U can guess how many arms I hav ;)",
+                desc: "Sexi girl rcently ded, looking 4 some fun",
+                diet: "Vegan Brainz"
+            }];
+            form.addEventListener('authenticated', function (ev) {
+                toProfiles();
+            });
+            storage.addEventListener('loaded', function() {
+                if (storage.memory.logged) {
+                    toProfiles();
+                } else {
+                    form.showLogin();
+                }
+            });
+            function toProfiles () {
+                pages.selectNext();
+                setTimeout(function () {
+                    chat.style.display = 'block';
+                    chat.startCrap();
+                }, Math.floor(Math.random() * 5000) + 2000);
+            }
+        </script>
+    </body>
+</html>

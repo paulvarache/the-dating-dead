@@ -1,0 +1,103 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/iron-flex-layout/classes/iron-flex-layout.html">
+
+<dom-module id="zombie-chat">
+    <template>
+        <style>
+            :host {
+                display: block;
+                position: absolute;
+                bottom: -2px;
+                right: 12px;
+            }
+            :host .messages {
+                overflow-y: auto;
+                max-height: 400px;
+            }
+            :host paper-card::shadow paper-material {
+                height: auto;
+            }
+            :host .messages .me {
+                align-self: flex-end;
+                background-color: grey !important;
+            }
+            :host .messages span {
+                color: white;
+                font-weight: 200;
+                background-color: var(--default-primary-color);
+                padding: 3px;
+                padding-right: 0.5em;
+                padding-left: 0.5em;
+                margin-bottom: 3px;
+                align-self: flex-start;
+                border-radius: 1em;
+            }
+            :host #messageInput {
+                width: 100%;
+            }
+        </style>
+        <paper-card heading="Chat">
+            <div class="card-content">
+                <div class="messages layout vertical" id="messages">
+                    <template is="dom-repeat" items="[[messages]]" as="message">
+                        <span class$="[[message.author]]">[[message.text]]</span>
+                    </template>
+                </div>
+                <form on-iron-form-submit="submitMessage" is="iron-form" id="form" class="layout horizontal">
+                    <paper-input name="text" label="message" id="messageInput"></paper-input>
+                </form>
+            </div>
+        </paper-card>
+    </template>
+</dom-module>
+<script>
+    Polymer({
+        is: 'zombie-chat',
+        properties: {
+            messages: {
+                type: Array,
+                value: []
+            }
+        },
+        crap: [
+            ['Hey gorgous', 'Hi Baby', 'Hi bb', 'Hey !', 'Heyyyyyy !', 'He ;)'],
+            ['I\'m horn', 'You luk hot', 'Im a lone'],
+            ['Wana open my leg ?', 'Want to look betwen my legz ?', 'Itz wet betwen my legz ;)'],
+            ['Even if I dont have legz anymor lol']
+        ],
+        startCrap: function () {
+            var prevDelay = 0;
+            this.crap.forEach(function (crap, index){
+                var randIndex = index === 0 ? 0 : Math.floor(Math.random()*crap.length);
+                prevDelay += (Math.floor(Math.random() * 3000) + 2000);
+                setTimeout(function () {
+                    this.addMessage({
+                        text: crap[randIndex]
+                    });
+                }.bind(this), prevDelay);
+            }.bind(this));
+        },
+        addMessage: function (message) {
+            this.push('messages', message);
+            setTimeout(function () {
+                this.$.messages.scrollTop = this.$.messages.scrollHeight;
+            }.bind(this));
+        },
+        submit: function () {
+            this.$.form.submit();
+        },
+        submitMessage: function (ev) {
+            ev.preventDefault();
+            var data = ev.detail;
+            data.author = 'me';
+            this.addMessage(data);
+            this.$.messageInput.value = "";
+            return false;
+        }
+    });
+</script>

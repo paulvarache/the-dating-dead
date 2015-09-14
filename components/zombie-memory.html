@@ -1,0 +1,28 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
+<dom-module is="zombie-memory">
+    <template>
+        <iron-localstorage name="the-dating-dead"
+                            value="{{memory}}"
+        ></iron-localstorage>
+    </template>
+</dom-module>
+<script>
+    Polymer({
+        is: 'zombie-memory',
+        properties: {
+            memory: Object
+        },
+        listeners: {
+            'iron-localstorage-load': 'onLoad'
+        },
+        onLoad: function () {
+            if (this.memory) {
+                this.fire('loaded', this.memory);
+            }
+        },
+        attached: function () {
+            this.onLoad();
+        }
+    });
+</script>

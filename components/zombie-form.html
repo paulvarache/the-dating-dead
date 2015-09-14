@@ -1,0 +1,113 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/iron-flex-layout/classes/iron-flex-layout.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="zombie-memory.html">
+<dom-module id="zombie-form">
+    <template>
+        <style>
+            :host {
+                display: block;
+                margin-right: 400px;
+            }
+            :host::shadow paper-material {
+                height: auto;
+            }
+            :host {
+                --paper-input-container-focus-color: var(--default-primary-color);
+            }
+            :host paper-button::shadow paper-ripple {
+                color: var(--default-primary-color);;
+            }
+            :host .error {
+                color: red;
+            }
+        </style>
+        <zombie-memory id="storage" memory="{{profile}}"></zombie-memory>
+        <paper-card>
+            <div class="card-content layout vertical">
+                <paper-button on-click="toggle">Signup</paper-button>
+                <iron-collapse id="signup">
+                    <form is="iron-form" class="layout vertical center wrap" id="signupForm">
+                        <paper-input type="text" name="pseudo" label="Pseudonyme" required></paper-input>
+                        <paper-input type="password" name="password" label="Password" required></paper-input>
+                        <paper-input type="text" name="integrity" label="Physical integrity" required></paper-input>
+                        <paper-dropdown-menu label="Diet" selected-item-label="{{diet}}">
+                            <paper-menu class="dropdown-content">
+                                <paper-item>All Brainz</paper-item>
+                                <paper-item>Vegan Brainz</paper-item>
+                                <paper-item>Ovo-lacto Vegan Brainz</paper-item>
+                                <paper-item>Gluten-free Brainz</paper-item>
+                            </paper-menu>
+                        </paper-dropdown-menu>
+                        <input is="iron-input" name="diet" type="hidden" value="[[diet]]" required>
+                        <paper-button raised on-click="onSignup">Signup</paper-button>
+                    </form>
+                </iron-collapse>
+                <paper-button on-click="toggle">Login</paper-button>
+                <iron-collapse id="login">
+                    <div class="error">{{error}}</div>
+                    <form is="iron-form" class="layout vertical center wrap" id="loginForm">
+                        <paper-input name="pseudo" label="Pseudonyme"></paper-input>
+                        <paper-input name="password" label="Password" type="password"></paper-input>
+                        <paper-button raised on-click="onLogin">login</paper-button>
+                    </form>
+                </iron-collapse>
+            </div>
+        </paper-card>
+    </template>
+</dom-module>
+<script>
+    Polymer({
+        is: 'zombie-form',
+        extends: 'form',
+        properties: {
+            mode: {
+                type: String,
+                value: 'Signup'
+            },
+            profile: Object
+        },
+        listeners: {
+            'storage.loaded': 'onLoad'
+        },
+        onSignup: function () {
+            if(this.$.signupForm.validate()) {
+                this.profile = this.$.signupForm.serialize();
+                this.profile.logged = true;
+                this.fire('authenticated');
+            }
+        },
+        onLogin: function () {
+            var loginInfo = this.$.loginForm.serialize();
+            if (loginInfo.pseudo === this.profile.pseudo
+                && loginInfo.password === this.profile.password) {
+                    this.profile.logged = true;
+                    this.fire('authenticated');
+            } else {
+                this.error = "Pseudo or password invalid";
+            }
+        },
+        onLoad: function (ev) {
+            this.profile = ev.detail;
+        },
+        ready: function () {
+            this.$.signup.show();
+        },
+        toggle: function () {
+            this.mode = this.mode === 'Signup' ? 'Login' : 'Signup';
+            this.$.signup.toggle();
+            this.$.login.toggle();
+        },
+        showLogin: function () {
+            this.$.signup.hide();
+            this.$.login.show();
+        }
+    });
+</script>

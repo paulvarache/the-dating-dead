@@ -1,0 +1,35 @@
+html, body {
+    font-family: Roboto;
+    padding: 0;
+    margin: 0;
+}
+paper-toolbar {
+    z-index: 3;
+}
+.title small {
+    fonct-weight: 100;
+}
+body::before {
+    background: url('images/bg.jpg');
+    background-size: cover;
+    -webkit-filter: blur(3px);
+    content: "";
+    position: fixed;
+    z-index: 1;
+    top:0px;
+    bottom:0px;
+    left:0px;
+    right:0px;
+}
+.page-content {
+    min-width: 560px;
+    height: 100%;
+}
+.page {
+    position: fixed;
+    left: 0px;
+    right: 0px;
+    top: 64px;
+    bottom: 0px;
+    z-index: 2;
+}
